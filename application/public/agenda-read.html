@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>안건 조회하기</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+    <div class="container">
+        <br>
+        <h2>안건 조회하기</h2>
+        <br>
+            <label for="name" class="form-label">인증서:</label><br>
+            <input type="text" class="form-control" id="cert" name="cert" value="appUser"><br>
+            <label for="name" class="form-label">안건이름:</label><br>
+            <input type="text" class="form-control" id="name" name="name" value="title1"><br>
+            <br>
+            <button id="read-btn" class="btn btn-primary">안건조회</button>&nbsp
+            <a href="/" class="btn btn-secondary">돌아가기</a>
+        <br><br>
+        <p class="lead">If you click the "Submit" button, a information of agenda are retrieved".</p>
+        <div>
+            <div id="a_result"></div>
+            <table id="result-table" class="table table-sm"></table>
+        </div>
+    </div>
+</body>
+
+<script>
+    $("#read-btn").click( function(){
+        var cert = $("#cert").val();
+        var aname = $("#a_name").val();
+        
+        console.log("read-btn clicked", aname);
+
+        $.get('/agenda', {cert, a_name}, function(data){
+            
+            $("#a_result").empty();
+
+            // result message 표시
+            $("#a_result").append("<i class='bi bi-chat-square-dots'></i>");
+            $("#a_result").append("<p class='lead'>"+JSON.stringify(data)+"</p>");
+            
+            // result table 표시
+            $("#result-table").empty()
+            $("#result-str").append("<i class='bi bi-table'></i>");
+            if (data.result == "success") {
+                $("#a_result-table").append("<tr><td>ANAME:</td><td>"+data.message.aname+"</td></tr>");
+                               
+            } else {
+                $("#a_result-table").append("<tr><td>ANAME:</td><td> </td></tr>");
+                               
+            }
+        });
+    });
+</script>
+
+</html>

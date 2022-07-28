@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>안건 생성하기</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+    <div class="container">
+        <br>
+        <h2>안건 생성하기</h2>
+        <br>
+        <label for="name" class="form-label">인증서:</label><br>
+        <input type="text" class="form-control" id="cert" name="cert" value="appUser"><br>
+        <label for="aname" class="form-label">안건이름:</label><br>
+        <input type="text" class="form-control" id="a_name" name="a_name" value="title1"><br>
+        <label for="auser" class="form-label">안건발재자:</label><br>
+        <input type="text" class="form-control" id="a_user" name="a_user" value="301-1301"><br>
+        <br>
+        <button id="create-btn" class="btn btn-primary">안건생성</button>&nbsp
+        <a href="/" class="btn btn-secondary">돌아가기</a>
+        <br><br>
+        <p class="lead">If you click the "Submit" button, a transaction of agenda creation will be submitted".</p>
+        <div>
+            <div id="a_result"></div>
+            <!-- <table id="result-table" class="table table-sm"></table> -->
+        </div>
+    </div>
+</body>
+
+<script>
+    $("#create-btn").click( function(){
+        var aname = $("#a_name").val();
+        var auser = $("#a_user").val();
+
+        
+        console.log("create-btn clicked", aname, auser);
+
+        $.post('/agenda', {aname,auser}, function(data){
+
+            $("#a_result").empty();
+            // result message 표시
+            $("#a_result").append("<i class='bi bi-chat-square-dots'></i>");
+            $("#a_result").append("<p class='lead'>"+JSON.stringify(data)+"</p>");
+            
+            // result table 표시
+            $("#result-table").empty()
+            $("#result-str").append("<i class='bi bi-table'></i>");
+            if (data.result == "success") {
+                $("#a_result-table").append("<tr><td>ANAME:</td><td>"+data.message.aname+"</td></tr>");
+                $("#a_result-table").append("<tr><td>AUSER:</td><td>"+data.message.auser+"</td></tr>");
+               
+            } else {
+                $("#a_result-table").append("<tr><td>ANAME:</td><td> </td></tr>");
+                $("#a_result-table").append("<tr><td>AUSER:</td><td> </td></tr>");
+               
+            }
+            // 추가 표시는 알아서
+        });
+    });
+</script>
+
+</html>

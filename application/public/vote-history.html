@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>투표 이력 조회하기</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+    <div class="container">
+        <br>
+        <h2>투표 이력 조회하기</h2>
+        <br>
+            <label for="name" class="form-label">인증서:</label><br>
+            <input type="text" class="form-control" id="cert" name="cert" value="appUser"><br>
+            <label for="name" class="form-label">안건이름:</label><br>
+            <input type="text" class="form-control" id="a_name" name="a_name" value="title1"><br>
+            <br>
+            <button id="read-btn" class="btn btn-primary">투표이력조회</button> &nbsp
+            <a href="/" class="btn btn-secondary">돌아가기</a>
+        <br><br>
+        <p class="lead">If you click the "Submit" button, a information of vote are retrieved".</p>
+        <div>
+            <div id="a_result"></div>
+            <table id="result-table" class="table table-sm"></table>
+        </div>
+    </div>
+</body>
+
+<script>
+    $("#read-btn").click( function(){
+        var cert = $("#cert").val();
+        var aname = $("#aname").val();
+
+        console.log("read-btn clicked", aname);
+
+        $.get('/marble/history', {cert, aname}, function(data){
+            
+            $("#a_result").empty();
+
+            // result message 표시
+            $("#a_result").append("<i class='bi bi-chat-square-dots'></i>");
+            $("#a_result").append("<p class='lead'>"+JSON.stringify(data)+"</p>");
+            
+            // result table 표시
+            $("#result-table").empty()
+            $("#a_result").append("<i class='bi bi-table'></i>");
+            if (data.result == "success") {
+                for(var i = 0; i< data.message.length; i++){
+                    $("#result-table").append("<tr><td>RECORD:</td><td>"+JSON.stringify(data.message[i].record)+"</td></tr>");
+                    $("#result-table").append("<tr><td>TXID:</td><td>"+data.message[i].txId+"</td></tr>");
+                    $("#result-table").append("<tr><td>TIMESTAMP:</td><td>"+data.message[i].timestamp+"</td></tr>");
+                    $("#result-table").append("<tr><td>ISDELETE:</td><td>"+data.message[i].isDelete+"</td></tr>");
+                }
+            } else {
+                $("#result-table").append("<tr><td>RECORD:</td><td> </td></tr>");
+                $("#result-table").append("<tr><td>TXID:</td><td> </td></tr>");
+                $("#result-table").append("<tr><td>TIMESTAMP:</td><td> </td></tr>");
+                $("#result-table").append("<tr><td>ISDELETE:</td><td> </td></tr>");
+            }
+        });
+    });
+</script>
+
+</html>
